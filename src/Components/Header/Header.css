@@ -1,0 +1,36 @@
+.container_header {
+    display: grid;
+    grid-template-columns: repeat(8, auto);
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    
+    gap: 10px;
+
+    white-space: nowrap;
+    background-color: #287233;
+    color: #f8f8d9;
+    padding: 0.5% 5vw;
+    margin-bottom: 3vh;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.el {
+    
+}
+
+.logo {
+    
+}
+
+.nav {
+    
+}

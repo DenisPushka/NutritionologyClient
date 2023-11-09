@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/%7BNutritionologyClient%7D/static/css/main.c7bbb59f.css",
-    "main.js": "/%7BNutritionologyClient%7D/static/js/main.5392c840.js",
-    "static/js/496.35c5cd29.chunk.js": "/%7BNutritionologyClient%7D/static/js/496.35c5cd29.chunk.js",
-    "index.html": "/%7BNutritionologyClient%7D/index.html",
-    "main.c7bbb59f.css.map": "/%7BNutritionologyClient%7D/static/css/main.c7bbb59f.css.map",
-    "main.5392c840.js.map": "/%7BNutritionologyClient%7D/static/js/main.5392c840.js.map",
-    "496.35c5cd29.chunk.js.map": "/%7BNutritionologyClient%7D/static/js/496.35c5cd29.chunk.js.map"
+    "main.css": "/NutritionologyClient/static/css/main.c7bbb59f.css",
+    "main.js": "/NutritionologyClient/static/js/main.47b425dd.js",
+    "static/js/496.35c5cd29.chunk.js": "/NutritionologyClient/static/js/496.35c5cd29.chunk.js",
+    "index.html": "/NutritionologyClient/index.html",
+    "main.c7bbb59f.css.map": "/NutritionologyClient/static/css/main.c7bbb59f.css.map",
+    "main.47b425dd.js.map": "/NutritionologyClient/static/js/main.47b425dd.js.map",
+    "496.35c5cd29.chunk.js.map": "/NutritionologyClient/static/js/496.35c5cd29.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c7bbb59f.css",
-    "static/js/main.5392c840.js"
+    "static/js/main.47b425dd.js"
   ]
 }

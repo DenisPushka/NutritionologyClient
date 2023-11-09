@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/NutritionologyClient/static/css/main.c7bbb59f.css",
-    "main.js": "/NutritionologyClient/static/js/main.49703caf.js",
+    "main.js": "/NutritionologyClient/static/js/main.1663a1f8.js",
     "static/js/496.35c5cd29.chunk.js": "/NutritionologyClient/static/js/496.35c5cd29.chunk.js",
     "index.html": "/NutritionologyClient/index.html",
     "main.c7bbb59f.css.map": "/NutritionologyClient/static/css/main.c7bbb59f.css.map",
-    "main.49703caf.js.map": "/NutritionologyClient/static/js/main.49703caf.js.map",
+    "main.1663a1f8.js.map": "/NutritionologyClient/static/js/main.1663a1f8.js.map",
     "496.35c5cd29.chunk.js.map": "/NutritionologyClient/static/js/496.35c5cd29.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c7bbb59f.css",
-    "static/js/main.49703caf.js"
+    "static/js/main.1663a1f8.js"
   ]
 }

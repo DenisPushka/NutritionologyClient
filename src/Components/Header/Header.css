@@ -1,14 +1,18 @@
 .container_header {
-    display: grid;
-    grid-template-columns: repeat(8, auto);
-    /*display: flex;*/
+    /*display: grid;*/
+    /*grid-template-columns: repeat(8, auto);*/
     /*justify-content: space-between;*/
-    
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: 10px;
 
     white-space: nowrap;
+    /*background-color: #167116;*/
     background-color: #287233;
     color: #f8f8d9;
+    /*color: #f8f8d9;*/
     padding: 0.5% 5vw;
     margin-bottom: 3vh;
 }

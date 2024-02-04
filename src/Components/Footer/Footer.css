@@ -1,8 +1,12 @@
 ﻿
 .containerFooter {
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+
+    /*align-items: center;*/
+    align-items: center;
     display: flex;
     justify-content: space-between;
-
     gap: 10px;
 
     white-space: nowrap;

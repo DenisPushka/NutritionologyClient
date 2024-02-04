@@ -2,9 +2,28 @@
     all: initial;
 }
 
+* {
+    font-family: Consolas, monospace;
+}
+
+html {
+    height: 100%;
+}
+
 body {
-    background-color: #f8f8d9;
-    color: #287233;
+    background-color: #1b4332;
+    /*background-color: #f8f8d9;*/
+    color: rgba(253, 252, 252, 0.6);
+    min-height: 100%;
+    /*color: #287233;*/
+}
+
+footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 6vh;
 }
 
 hr {

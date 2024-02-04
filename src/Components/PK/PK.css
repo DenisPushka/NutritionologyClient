@@ -1,4 +1,21 @@
 ﻿
 .containerPK {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 30px 60px;
     padding: 0.5% 5vw;
+}
+
+.parameter_in_pk {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.photo_pk {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
 }

@@ -18,15 +18,15 @@ const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)))
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Provider store={store}>
-        <BrowserRouter>
+        <HashRouter>
             <Routes>
-                <Route path="*" element={<Home />} />
+                <Route path="/*" element={<Home />} />
                 <Route path="/LogIn" element={<LogIn />} />
                 <Route path="/SignUp" element={<SignUp />} />
                 <Route path="/PK" element={<PK />} />
                 <Route path="/CreateDish" element={<CreateDish />} />
             </Routes>
-        </BrowserRouter>
+        </HashRouter >
     </Provider>
 );
 

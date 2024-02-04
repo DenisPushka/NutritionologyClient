@@ -1,13 +1,13 @@
-﻿import {Component} from "react";
+﻿import React, {Component} from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import "./PK.css";
+import CreateParameter from "../CreateParamters/CreateParameter";
 
 // Личный кабинет.
 class PK extends Component {
 
     state = {
-
         // Пользователь.
         user: {
             id: "",
@@ -34,7 +34,7 @@ class PK extends Component {
             companyId: "",
             name: ""
         },
-        
+
         type: "customer",
 
         // Парамаетры (Использовать объекты Parameter.js).
@@ -59,93 +59,111 @@ class PK extends Component {
 
                 <div className={"containerPK"}>
 
-                    {/*Юр лицо.*/}
-                    {
-                        this.state.customer !== null && this.state.type === 'customer' &&
+                    <div className={"photo_pk"}>
                         <div>
-                            <div>
-                                Имя: {this.state.customer.name}
-                            </div>
-
-                            <div>
-                                Фамилия: {this.state.customer.lastName}
-                            </div>
-
+                            Фото {this.state.user.photo}
                         </div>
-                    }
 
-                    {/*Физ лицо.*/}
-                    {
-                        this.state.company !== null && this.state.type === 'company' &&
-                        <div>
+                        <button>
+                            Изменить фото
+                        </button>
+                    </div>
+
+                    <div className={"parameter_in_pk"}>
+
+                        {/*Юр лицо.*/}
+                        {
+                            this.state.customer !== null && this.state.type === 'customer' &&
                             <div>
-                                Название: {this.state.company.name}
+                                <div>
+                                    Имя: {this.state.customer.name}
+                                </div>
+
+                                <input type="text"/>
+
+                                <div>
+                                    Фамилия: {this.state.customer.lastName}
+                                </div>
+                                <input type="text"/>
+
                             </div>
-                        </div>
-                    }
+                        }
 
-                    {/* Общие данные.*/}
-                    {
-                        this.state.user !== null &&
-                        <div>
+                        {/*Физ лицо.*/}
+                        {
+                            this.state.company !== null && this.state.type === 'company' &&
                             <div>
-                                Почта: {this.state.user.email}
+                                <div>
+                                    Название: {this.state.company.name}
+                                </div>
+                                <input type="text"/>
                             </div>
+                        }
 
+                        {/* Общие данные.*/}
+                        {
                             <div>
-                                Телефон: {this.state.user.phone}
-                            </div>
+                                <div>
+                                    Почта: {this.state.user.email}
+                                </div>
+                                <input type="text"/>
 
-                            <div>
-                                Фото {this.state.user.photo}
-                            </div>
+                                <div>
+                                    Телефон: {this.state.user.phone}
+                                </div>
+                                <input type="text"/>
 
-                            Подписка:
-                            <div>
-                                {
-                                    this.state.user.subscription !== null &&
-                                    <div>
+
+                                Подписка:
+                                <div>
+                                    {
+                                        this.state.user.subscription !== null &&
                                         <div>
-                                            Название подписки: {this.state.user.subscription.name}
-                                        </div>
+                                            <div>
+                                                Название подписки: {this.state.user.subscription.name}
+                                            </div>
 
-                                        <div>
-                                            Цена: {this.state.user.subscription.price}
+                                            <div>
+                                                Цена: {this.state.user.subscription.price}
+                                            </div>
                                         </div>
-                                    </div>
-                                }
+                                    }
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
 
 
-                    Параметры
+                        Параметры
 
-                    {this.state.parameters.length > 0 && this.state.parameters.map((parameter) => {
-                        return (
-                            <div>Пол: {parameter.gender.shortName}</div> &&
-                            <div>Рост (см.): {parameter.height}</div> &&
-                            <div>Вес (кг.): {parameter.weight}</div> &&
-                            <div>Возраст: {parameter.age}</div> &&
-                            <div>Любимые продукты: </div> &&
-
-                            parameter.likeProducts.length > 0 && parameter.likeProducts.map((product) => {
+                        {
+                            this.state.parameters.length > 0 && this.state.parameters.map((parameter) => {
                                 return (
-                                    <div>
-                                        {product.fullName},
-                                    </div>
-                                );
-                            }) &&
-                            <div>Нежелательные продукты: </div> &&
-                            parameter.problemProducts.length > 0 && parameter.problemProducts.map((product) => {
-                                return (
-                                    <div>
-                                        {product.fullName},
-                                    </div>
+                                    <div>Пол: {parameter.gender.shortName}</div> &&
+                                    <div>Рост (см.): {parameter.height}</div> &&
+                                    <div>Вес (кг.): {parameter.weight}</div> &&
+                                    <div>Возраст: {parameter.age}</div> &&
+                                    <div>Любимые продукты: </div> &&
+
+                                    parameter.likeProducts.length > 0 && parameter.likeProducts.map((product) => {
+                                        return (
+                                            <div>
+                                                {product.fullName},
+                                            </div>
+                                        );
+                                    }) &&
+                                    <div>Нежелательные продукты: </div> &&
+                                    parameter.problemProducts.length > 0 && parameter.problemProducts.map((product) => {
+                                        return (
+                                            <div>
+                                                {product.fullName},
+                                            </div>
+                                        );
+                                    })
                                 );
                             })
-                        );
-                    })}
+                        }
+
+                    </div>
                 </div>
 
                 <Footer/>

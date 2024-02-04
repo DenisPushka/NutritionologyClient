@@ -13,10 +13,6 @@ class Header extends Component {
 
     constructor(props) {
         super(props);
-
-
-        // this.showLittleMenu = this.showLittleMenu.bind(this);
-        // this.checkOpenMenu = this.checkOpenMenu.bind(this);
     }
 
     componentDidMount() {
@@ -81,20 +77,19 @@ class Header extends Component {
                     Logo
                 </div>
 
-                <div><Nav.Link href="/#">Главная</Nav.Link></div>
-                <div><Nav.Link href="/Command">Команда</Nav.Link></div>
+                <div><Nav.Link href="/NutritionologyClient/#/">Главная</Nav.Link></div>
 
                 {this.state.user.email !== '' ? (
                     <>
-                        <div><Nav.Link href="/Menu">Мой рацион</Nav.Link></div>
-                        <div><Nav.Link href="/PK">Личный кабинет</Nav.Link></div>
+                        <div><Nav.Link href="/NutritionologyClient/#/Menu">Мой рацион</Nav.Link></div>
+                        <div><Nav.Link href="/NutritionologyClient/#/PK">Личный кабинет</Nav.Link></div>
                         {/*// todo вынести для компаний и админа*/}
-                        <div><Nav.Link href="/CreateDish">Создание блюда</Nav.Link></div>
+                        <div><Nav.Link href="/NutritionologyClient/#/CreateDish">Создание блюда</Nav.Link></div>
                     </>
                 ) : (
                     <>
-                        <div><Nav.Link href="/SignUp">Регистрация</Nav.Link></div>
-                        <div><Nav.Link href="/LogIn">Вход</Nav.Link></div>
+                        <div><Nav.Link href="/NutritionologyClient/#/SignUp">Регистрация</Nav.Link></div>
+                        <div><Nav.Link href="/NutritionologyClient/#/LogIn">Вход</Nav.Link></div>
                     </>
                 )}
             </header>

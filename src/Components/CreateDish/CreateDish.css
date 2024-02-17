@@ -156,3 +156,9 @@ th:first-child, td:first-child {
     width: 50%;
     height: 10%;
 }
+
+
+.create_dish_type_lunch {
+    display: none;
+    padding-top: 1%;
+}

@@ -2,8 +2,6 @@ import {Component} from "react";
 import Header from "../Header/Header";
 import "./CreateDish.css"
 
-// 4. Тип обеда, при выборе обеда.
-// 5. На стороне бека добавить логи.
 export class CreateDish extends Component {
 
     state = {
@@ -21,7 +19,8 @@ export class CreateDish extends Component {
             },
             mealTimes: [],
             isDrink: false,
-            typeLunch: {}
+            typeLunch: {},
+            nutrients: []
         },
         getProducts: [],
         mealTimes: [
@@ -41,7 +40,29 @@ export class CreateDish extends Component {
             {msId: '3C9AB7DB-40DB-45FC-AAB4-94FB96D57FDC', shortName: 'г'},
             {msId: '54DCBE51-8542-454E-B206-E91370CD14F1', shortName: 'мг'}
         ],
-        currentMS: {msId: 'ECB9C9F2-1C4D-4A01-9433-0156C52A7E0E', shortName: 'мкг'}
+        currentMS: {msId: 'ECB9C9F2-1C4D-4A01-9433-0156C52A7E0E', shortName: 'мкг'},
+        typeLunches: [
+            {
+                typeLunchId: '6BC46D32-AD83-11EE-9776-982CBC0BBE80',
+                name: 'Салат'
+            },
+            {
+                typeLunchId: '6BC466C2-AD83-11EE-9776-982CBC0BBE80',
+                name: 'Первое'
+            },
+            {
+                typeLunchId: '6BC46C53-AD83-11EE-9776-982CBC0BBE80',
+                name: 'Второе'
+            },
+            {
+                typeLunchId: '6BC46D96-AD83-11EE-9776-982CBC0BBE80',
+                name: 'Десерт'
+            },
+            {
+                typeLunchId: '6BC46DEF-AD83-11EE-9776-982CBC0BBE80',
+                name: 'Напиток'
+            },
+        ]
     }
 
     componentDidMount() {
@@ -58,8 +79,10 @@ export class CreateDish extends Component {
                 this.setState({getProducts: data}, () => {
                     this.createSelectForProducts();
                     this.createSelectForMealTimes();
+                    this.createSelectForTypeLunches();
                     document.getElementById('create_dish_input_products_id').addEventListener('change', this.takeProduct.bind(this));
                     document.getElementById('create_dish_meal_times_input_id').addEventListener('change', this.takeMealtime.bind(this));
+                    document.getElementById('create_dish_type_lunch_id').addEventListener('change', this.takeTypeLunch.bind(this));
                     console.log(`%c download products`, "color: green");
                 });
             })
@@ -73,7 +96,6 @@ export class CreateDish extends Component {
         dataListElementProducts.id = 'products_id';
         document.getElementById('create_dish_products_id').appendChild(dataListElementProducts);
 
-        // todo css.
         this.state.getProducts.forEach((product) => {
             let option = document.createElement('option');
             option.value = product.productFullName;
@@ -146,6 +168,10 @@ export class CreateDish extends Component {
 
         if (takeMealTime === undefined) return;
 
+        if (takeMealTime.name === 'Обед') {
+            document.getElementById("create_dish_type_lunch_id").style.display = "block";
+        }
+
         this.state.dish.mealTimes.push(takeMealTime);
         console.log(`%c take mealTime - ${takeMealTime.name}`, "color: violet");
         this.showTakeMealTime(takeMealTime);
@@ -161,7 +187,7 @@ export class CreateDish extends Component {
 
     /*endregion*/
 
-    onClickButtonSaveOnProduct = (evt) => {
+    onClickButtonSaveOnProduct = () => {
         console.log(Number(document.getElementById("create_dish_weight_input_id").value))
         this.state.dish.productDishes[this.state.dish.productDishes.length - 1].weight = Number(document.getElementById("create_dish_weight_input_id").value);
         this.state.dish.productDishes[this.state.dish.productDishes.length - 1].ms = this.state.currentMS;
@@ -211,6 +237,40 @@ export class CreateDish extends Component {
 
     // endregion
 
+    createSelectForTypeLunches() {
+        let dataListElement = document.createElement('datalist');
+        dataListElement.id = 'type_lunch_id';
+
+        this.state.typeLunches.forEach(type => {
+            let option = document.createElement('option');
+            option.value = type.name;
+            option.innerText = type.name;
+            dataListElement.appendChild(option);
+        });
+
+        document.getElementById('create_dish_type_lunch_id').appendChild(dataListElement);
+    }
+
+    takeTypeLunch(evt) {
+        if (evt.target.value === null || evt.target.value === '') return;
+
+        let find = this.state.typeLunches.find((typeLunch) => {
+            if (typeLunch.name === evt.target.value) {
+                return typeLunch;
+            }
+        });
+
+        if (find === undefined) return;
+
+        if (find.name === 'Обед') {
+            document.getElementById("create_dish_type_lunch_id").style.display = "block";
+        }
+
+        // this.state.dish.typeLunch = find;
+        this.setState({dish: {...this.state.dish, typeLunch: find}});
+        console.log(`%c take type lunch - ${find.name}`, "color: violet");
+    }
+
     cleanDish() {
         this.setState({
             dish: {
@@ -230,6 +290,16 @@ export class CreateDish extends Component {
                 typeLunch: {}
             }
         });
+
+        // let ch = document.getElementById('create_dish_row_meal_time_id').childNodes;
+        // for (let i = 0; i < ch.length; i++) {
+        //     ch[i--].remove();
+        // }
+        //
+        // let prs = document.getElementById('create_dish_table_id').childNodes;
+        // for (let i = 0; i < prs.length; i++) {
+        //     prs[i--].remove();
+        // }
     }
 
     render() {
@@ -269,6 +339,12 @@ export class CreateDish extends Component {
                         <input id={'create_dish_meal_times_input_id'} list={"meal_times_id"}
                             // placeholder={this.state.mealTimes[0].name}
                         />
+
+                        <div id={"create_dish_type_lunch_id"} className={"create_dish_type_lunch"}>
+                            Тип обеда: <br/>
+
+                            <input id={'create_dish_type_lunch_input_id'} list={"type_lunch_id"}/>
+                        </div>
                     </div>
 
                     <div className={"create_dish_take_products"}>
@@ -341,6 +417,7 @@ export class CreateDish extends Component {
                             className={'create_dish_create_name_dish_input'}
                         />
                     </div>
+
                 </div>
             </>
         )

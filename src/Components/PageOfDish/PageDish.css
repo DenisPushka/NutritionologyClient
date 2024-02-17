@@ -1,0 +1,36 @@
+
+.headerPageDish {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+
+    padding: 2%;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.pageDishPhotoNutrientsProducts {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.pageDishRecipe {
+    padding: 2%;
+    font-size: 18px;
+    font-weight: 500;
+
+}
+
+.pageDishButton {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 2%;
+}
+
+.pageDishRecipeDescription {
+    font-size: 14px;
+    padding: 1%;
+}

@@ -69,29 +69,28 @@ class Header extends Component {
 
             <header className={"container_header"}>
 
-                <div className={"name"}>
-                    Nutritionology
-                </div>
+                <Nav.Link href="/NutritionologyClient/#/">
+                    <div className={["name", "logo"].join(' ')}>
+                        Nutritionology
+                    </div>
+                </Nav.Link>
 
-                <div className={"logo"}>
-                    Logo
-                </div>
-
-                <div><Nav.Link href="/NutritionologyClient/#/">Главная</Nav.Link></div>
-
-                {this.state.user.email !== '' ? (
-                    <>
-                        <div><Nav.Link href="/NutritionologyClient/#/Menu">Мой рацион</Nav.Link></div>
-                        <div><Nav.Link href="/NutritionologyClient/#/PK">Личный кабинет</Nav.Link></div>
-                        {/*// todo вынести для компаний и админа*/}
-                        <div><Nav.Link href="/NutritionologyClient/#/CreateDish">Создание блюда</Nav.Link></div>
-                    </>
-                ) : (
-                    <>
-                        <div><Nav.Link href="/NutritionologyClient/#/SignUp">Регистрация</Nav.Link></div>
-                        <div><Nav.Link href="/NutritionologyClient/#/LogIn">Вход</Nav.Link></div>
-                    </>
-                )}
+                {
+                    this.state.user.email !== ''
+                        ? (
+                            <>
+                                <div><Nav.Link href="/NutritionologyClient/#/Menu">Мой рацион</Nav.Link></div>
+                                <div><Nav.Link href="/NutritionologyClient/#/PK">Личный кабинет</Nav.Link></div>
+                                {/*// todo вынести для компаний и админа*/}
+                                <div><Nav.Link href="/NutritionologyClient/#/CreateDish">Создание блюда</Nav.Link></div>
+                            </>
+                        ) : (
+                            <div className={"login_and_reg"}>
+                                <div><Nav.Link href="/NutritionologyClient/#/SignUp">Регистрация</Nav.Link></div>
+                                <div><Nav.Link href="/NutritionologyClient/#/LogIn">Вход</Nav.Link></div>
+                            </div>
+                        )
+                }
             </header>
         </>);
     }

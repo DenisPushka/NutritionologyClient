@@ -38,3 +38,8 @@ a {
 .nav {
     
 }
+
+.login_and_reg {
+    display: flex;
+    gap: 40px;
+}

@@ -1,8 +1,9 @@
 import {Component} from "react";
 import Header from "../Header/Header";
 import "./CreateDish.css"
+import {connect} from "react-redux";
 
-export class CreateDish extends Component {
+class CreateDish extends Component {
 
     state = {
         dish: {
@@ -65,7 +66,32 @@ export class CreateDish extends Component {
         ]
     }
 
+    constructor(props) {
+        super(props);
+
+        console.log(this.props)
+    }
+
     componentDidMount() {
+        let callback = (data, hasProducts) => {
+            this.createSelectForProducts();
+            this.createSelectForMealTimes();
+            this.createSelectForTypeLunches();
+            if (!hasProducts)
+                this.props.setProducts(data);
+            document.getElementById('create_dish_input_products_id').addEventListener('change', this.takeProduct.bind(this));
+            document.getElementById('create_dish_meal_times_input_id').addEventListener('change', this.takeMealtime.bind(this));
+            document.getElementById('create_dish_type_lunch_id').addEventListener('change', this.takeTypeLunch.bind(this));
+            console.log(`%c download products`, "color: green");
+        };
+
+        if (this.props.products !== null && this.props.products.length !== 0) {
+            this.setState({getProducts: this.props.products},
+                    () => callback(JSON.parse(sessionStorage.getItem(this.props.products, true)))
+            );
+            return
+        }
+
         fetch('/product/products', {
             method: 'GET',
             headers: {
@@ -75,17 +101,7 @@ export class CreateDish extends Component {
             },
         })
             .then((res) => res.json())
-            .then((data) => {
-                this.setState({getProducts: data}, () => {
-                    this.createSelectForProducts();
-                    this.createSelectForMealTimes();
-                    this.createSelectForTypeLunches();
-                    document.getElementById('create_dish_input_products_id').addEventListener('change', this.takeProduct.bind(this));
-                    document.getElementById('create_dish_meal_times_input_id').addEventListener('change', this.takeMealtime.bind(this));
-                    document.getElementById('create_dish_type_lunch_id').addEventListener('change', this.takeTypeLunch.bind(this));
-                    console.log(`%c download products`, "color: green");
-                });
-            })
+            .then((data) => this.setState({getProducts: data}, () => callback(data, false)))
             .catch((error) => console.error(error));
     }
 
@@ -228,7 +244,12 @@ export class CreateDish extends Component {
     }
 
     onInputRecipe = (evt) => {
-        this.setState({dish: {...this.state.dish, recipe: {...this.state.dish.recipe, description: evt.target.value}}});
+        this.setState({
+            dish: {
+                ...this.state.dish,
+                recipe: {...this.state.dish.recipe, description: evt.target.value}
+            }
+        });
     }
 
     onInputNameDish = (evt) => {
@@ -313,7 +334,8 @@ export class CreateDish extends Component {
                     <div className={"create_dish_meal_times"}>Прием пищи</div>
 
                     <div id={"create_dish_products_id"} className={"create_dish_products_input"}>
-                        <input id={'create_dish_input_products_id'} className={"input_products"} list={"products_id"}/>
+                        <input id={'create_dish_input_products_id'} className={"input_products"}
+                               list={"products_id"}/>
                     </div>
 
                     <div className={"create_dish_weight_input"}>
@@ -423,3 +445,12 @@ export class CreateDish extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({
+        products: state.products
+    }),
+    dispatch => ({
+        setProducts: (products) => dispatch({type: 'SET_PRODUCTS', payload: products})
+    })
+)(CreateDish);

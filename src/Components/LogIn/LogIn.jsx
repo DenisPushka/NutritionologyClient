@@ -34,17 +34,17 @@ class LogIn extends Component {
         let data = new FormData();
         data.append("json", JSON.stringify({Login: form.children[1].value, Password: form.children[3].value}));
 
-        // fetch("http://localhost:8080/user/login",
         fetch("/Account/Login",
             {
                 method: 'POST',
                 body: data
             })
             .then(res => {
+                console.log(1)
                 res.json().then(async (data) => {
                     this.setState({user: data});
                     this.props.onAddUser(data);
-                    window.location = '/';
+                    window.location  = '/';
                 });
             });
     }
@@ -73,12 +73,12 @@ class LogIn extends Component {
     }
 }
 
-export default connect (
+export default connect(
     state => ({
         user: state.user,
     }),
     dispatch => ({
-        onAddUser: (user)=>{
+        onAddUser: (user) => {
             dispatch({type: 'ADD_USER', payload: user})
         }
     })

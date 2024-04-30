@@ -78,8 +78,6 @@ export default connect(
         user: state.user,
     }),
     dispatch => ({
-        onAddUser: (user) => {
-            dispatch({type: 'ADD_USER', payload: user})
-        }
+        onAddUser: (user) => dispatch({type: 'ADD_USER', payload: user})
     })
 )(LogIn);

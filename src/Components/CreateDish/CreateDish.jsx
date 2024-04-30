@@ -68,8 +68,6 @@ class CreateDish extends Component {
 
     constructor(props) {
         super(props);
-
-        console.log(this.props)
     }
 
     componentDidMount() {
@@ -359,7 +357,7 @@ class CreateDish extends Component {
 
                     <div id={"create_dish_meal_times_id"} className={"create_dish_meal_times_input"}>
                         <input id={'create_dish_meal_times_input_id'} list={"meal_times_id"}
-                            // placeholder={this.state.mealTimes[0].name}
+                            placeholder={this.state.mealTimes[0].name}
                         />
 
                         <div id={"create_dish_type_lunch_id"} className={"create_dish_type_lunch"}>

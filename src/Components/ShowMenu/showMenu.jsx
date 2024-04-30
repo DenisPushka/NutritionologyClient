@@ -154,6 +154,39 @@ class ShowMenu extends Component {
         return buffer;
     }
 
+    downloadDocument() {
+        fetch('/diet/document?id=E183F86B-6DF1-4B69-A33E-9F738ABFD2D4', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
+                'responseType': 'blob'
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob(); // Получаем ответ в виде Blob
+            })
+            .then(blob => {
+                // Создаем объект URL для Blob
+                const url = window.URL.createObjectURL(blob);
+
+                // Создаем ссылку для скачивания файла
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'diet.xls'; // Имя файла для скачивания
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+    }
+
     render() {
         return <>
             <Header/>
@@ -181,6 +214,8 @@ class ShowMenu extends Component {
                         </div>
 
                         <div>Количество приемов пищи: 3</div>
+
+                        <button onClick={this.downloadDocument}>Скачать отчет</button>
                     </div>
                 </div>
 
@@ -204,16 +239,6 @@ class ShowMenu extends Component {
                                 <div className={"table-data"}>День 1</div>
 
                                 {this.downloadDishes()}
-                                {/*<div className={"table-data"}>*/}
-                                {/*    <img src="../../logo.svg" alt={""}/>*/}
-                                {/*    <div>Name dish</div>*/}
-                                {/*    <div>Description</div>*/}
-                                {/*</div>*/}
-
-                                {/*<div className={"table-data"}>обед 1</div>*/}
-                                {/*<div className={"table-data"}>Полдник 1</div>*/}
-                                {/*<div className={"table-data"}>ужин 1</div>*/}
-                                {/*<div className={"table-data"}>Сонник 1</div>*/}
                             </div>
                         </div>
                     </div>

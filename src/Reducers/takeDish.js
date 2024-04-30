@@ -1,18 +1,12 @@
 import {Dish} from "../models";
+import {ACTIONS_NAME} from "../constants/actionsName";
 
-const initialState = Dish;
-
-export default function createDish(state = initialState, action) {
-    if (action.type === 'TAKE_DISH') {
-        sessionStorage.setItem('take_dish', JSON.stringify(action.payload));
-
-        return JSON.parse(sessionStorage.getItem('take_dish'));
+export default function takeDish (state = Dish , action) {
+    switch (action.type) {
+        case ACTIONS_NAME.SET_TAKE_DISH:
+            state = action.payload;
+            return action.payload;
+        default:
+            return state;
     }
-
-    // if (action.type === 'UPDATE_USER') {
-    //     sessionStorage.setItem('state', JSON.stringify(action.payload));
-    // }
-
-    const def = sessionStorage.getItem('take_dish');
-    return def === 'undefined' ? Dish : JSON.parse(def);
 }

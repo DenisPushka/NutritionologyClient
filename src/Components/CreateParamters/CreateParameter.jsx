@@ -4,6 +4,7 @@ import Header from "../Header/Header";
 import './CreateParameter.css'
 import Footer from "../Footer/Footer";
 import {connect} from "react-redux";
+import {addProducts} from "../../actions";
 
 class CreateParameter extends Component {
 
@@ -495,6 +496,6 @@ export default connect(
         products: state.products
     }),
     dispatch => ({
-        setProducts: (products) => dispatch({type: 'SET_PRODUCTS', payload: products})
+        setProducts: (products) => dispatch(addProducts(products))
     })
 )(CreateParameter);

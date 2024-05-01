@@ -2,6 +2,8 @@
 import Header from "../Header/Header";
 import "./SignUp.css";
 import Footer from "../Footer/Footer";
+import {connect} from "react-redux";
+import {addUser, goToPage} from "../../actions";
 
 // Регистрация.
 class SignUp extends Component {
@@ -9,7 +11,7 @@ class SignUp extends Component {
     state = {
         // Пользователь.
         user: {
-            id: "",
+            userId: "",
             email: "",
             password: "",
             photo: null,
@@ -37,131 +39,145 @@ class SignUp extends Component {
         isCustomer: true
     };
 
-    constructor(props) {
-        super(props);
+    postNewUser() {
+        let user = JSON.stringify({
+            userId: "",
+            photo: this.state.user.photo,
+            phone: this.state.user.phone,
+            subscription: {
+                subscriptionId: "75801D9F-EC46-4D2E-A450-0D9DCE4CD6B4",
+                name: "Бесплатная",
+                price: 0
+            },
+            customer: {
+                customerId: "",
+                name: this.state.customer.name,
+                lastName: this.state.customer.lastName
+            },
+            company: {
+                companyId: "",
+                name: this.state.company.name
+            },
+            userRole: {
+                userRoleId: "DE2A8343-A536-4AEA-93F1-27F392EC8029",
+                name: "USER"
+            },
+            email: this.state.user.email,
+            passwordHash: this.state.user.password,
+        });
 
-        this.getCustomer = this.getCustomer.bind(this);
-        this.getCompany = this.getCompany.bind(this);
+        console.log(user)
 
-        this.postNewUser = this.postNewUser.bind(this);
-
-        this.createNewUser = this.createNewUser.bind(this);
-    }
-
-    // Выбор физ лица.
-    getCustomer(event) {
-        event.preventDefault();
-
-        this.setState({isCustomer: true});
-    }
-
-    // Выбор юр лица.
-    getCompany(event) {
-        event.preventDefault();
-
-        this.setState({isCustomer: false});
-    }
-
-    async createNewUser() {
-        if (this.state.isCustomer) {
-            const form = document.getElementById("formForCustomer");
-
-            this.state.customer.name = form.childNodes.item(1).value;
-            this.state.customer.lastName = form.childNodes.item(3).value;
-            this.state.user.email = form.childNodes.item(5).value;
-            this.state.user.password = form.childNodes.item(7).value;
-            this.state.user.photo = form.childNodes.item(9).value;
-            this.state.user.phone = form.childNodes.item(11).value;
-            // await this.setState({customer: {...this.state.customer.name, form: {...this.state.form.childNodes.item(1).value}}});
-            // await this.setState({customer: {...this.state.customer.lastName, ...this.state.form.childNodes.item(3).value}});
-            // this.setState({customer: {...this.state.user.email, ...this.form.childNodes.item(5).value}});
-            // this.setState({customer: {...this.state.user.password, ...this.form.childNodes.item(7).value}});
-        } else {
-            const form = document.getElementById("formForCompany");
-
-            this.state.company.name = form.childNodes.item(1).value;
-            this.state.user.email = form.childNodes.item(3).value;
-            this.state.user.password = form.childNodes.item(5).value;
-            this.state.user.photo = form.childNodes.item(7).value;
-            this.state.user.phone = form.childNodes.item(9).value;
-        }
-
-        await this.postNewUser();
-    }
-
-    async postNewUser() {
-        let dictstring = JSON.stringify(
-            {
-                User: {
-                    Photo: this.state.user.photo,
-                    PhoneNumber: this.state.user.phone,
-                    Customer: {
-                        Name: this.state.customer.name,
-                        LastName: this.state.customer.lastName
-                    },
-                    Company: {
-                        Name: this.state.company.name
-                    },
-                    Email: this.state.user.email,
-                    PasswordHash: this.state.user.password
-                },
-                Role: {Name: "Customer"}
-            }
-        );
-        
-        let jsonString = JSON.stringify(dictstring)
-        console.log(jsonString)
-        await fetch('/Account/SignIn', {
+        fetch('/user/signUp', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json;charset=UTF-8'
             },
-            body: jsonString
-        }).then().catch(err => console.log(err));
+            body: user
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data)
+                // this.props.onAddUser(data);
+                // this.props.handleNavigate("/NutritionologyClient/#/")
+            })
+            .catch(err => console.log(err));
     }
 
     render() {
         return (
             <div>
-
                 <Header/>
 
                 <div className={"containerSignUp"}>
 
                     <div>
-                        <button onClick={this.getCustomer}>
+                        <button style={{marginRight: 10}} onClick={() => this.setState({isCustomer: true})}>
                             Физ лицо
                         </button>
 
-                        <button onClick={this.getCompany}>
+                        <button style={{marginLeft: 10}} onClick={() => this.setState({isCustomer: false})}>
                             Юр лицо
                         </button>
 
                     </div>
 
                     {/*Для пользователя.*/}
-                    {this.state.isCustomer &&
+                    {
+                        this.state.isCustomer &&
                         <form action="" id={"formForCustomer"} className={"formSignUp"}>
                             <div>
                                 Имя:
                             </div>
-                            <input type="text" id="formCustomerFirstName" required placeholder="Имя"/>
+                            <input
+                                type="text"
+                                id="formCustomerFirstName"
+                                required
+                                placeholder="Имя"
+                                onChange={(data) => {
+                                    this.setState({
+                                        ...this.state, customer:
+                                            {
+                                                ...this.state.customer, name: data.target.value
+                                            }
+                                    })
+                                }}
+                            />
 
                             <div>
                                 Фамилия:
                             </div>
-                            <input type="text" id="formCustomerLastName" required placeholder="Фамилия"/>
+                            <input
+                                type="text"
+                                id="formCustomerLastName"
+                                required
+                                placeholder="Фамилия"
+                                onChange={(data) => {
+                                    this.setState({
+                                        ...this.state, customer:
+                                            {
+                                                ...this.state.customer, lastName: data.target.value
+                                            }
+                                    })
+                                }}
+                            />
 
                             <div>
                                 Почта:
                             </div>
-                            <input type="text" id="formCustomerEmail" required placeholder="qwert@mail.com"/>
+                            <input
+                                type="text"
+                                id="formCustomerEmail"
+                                required
+                                placeholder="qwert@mail.com"
+                                onChange={(data) => {
+                                    this.setState({
+                                        ...this.state, user:
+                                            {
+                                                ...this.state.user, email: data.target.value
+                                            }
+                                    })
+                                }}
+                            />
 
                             <div>
                                 Пароль:
                             </div>
-                            <input type="text" id="formCustomerPassword" required placeholder="***"/>
+                            <input
+                                type="text"
+                                id="formCustomerPassword"
+                                required
+                                placeholder="***"
+                                onChange={(data) => {
+                                    this.setState({
+                                        ...this.state, user:
+                                            {
+                                                ...this.state.user, password: data.target.value
+                                            }
+                                    })
+                                }}
+                            />
 
                             <div>
                                 Фото:
@@ -171,27 +187,80 @@ class SignUp extends Component {
                             <div>
                                 Телефон:
                             </div>
-                            <input type="text" id="formCustomerPhone" required placeholder=""/>
+                            <input
+                                type="text"
+                                id="formCustomerPhone"
+                                required
+                                placeholder="+(111) 111 - 11 - 11"
+                                onChange={(data) => {
+                                    this.setState({
+                                        ...this.state, user:
+                                            {
+                                                ...this.state.user, phone: data.target.value
+                                            }
+                                    })
+                                }}
+                            />
                         </form>
                     }
 
                     {/*Для компании.*/}
-                    {!this.state.isCustomer &&
+                    {
+                        !this.state.isCustomer &&
                         <form action="" id={"formForCompany"} className={"formSignUp"}>
                             <div>
                                 Название компании:
                             </div>
-                            <input type="text" id="formCompanyName" required placeholder="Название"/>
+                            <input
+                                type="text"
+                                id="formCompanyName"
+                                required
+                                placeholder="Название"
+                                onChange={(data) => {
+                                    this.setState({
+                                        ...this.state, company:
+                                            {
+                                                ...this.state.company, name: data.target.value
+                                            }
+                                    })
+                                }}
+                            />
 
                             <div>
                                 Почта:
                             </div>
-                            <input type="text" id="formCompanyEmail" required placeholder="Почта"/>
+                            <input
+                                type="text"
+                                id="formCompanyEmail"
+                                required
+                                placeholder="Почта"
+                                onChange={(data) => {
+                                    this.setState({
+                                        ...this.state, user:
+                                            {
+                                                ...this.state.user, email: data.target.value
+                                            }
+                                    })
+                                }}
+                            />
 
                             <div>
                                 Пароль:
                             </div>
-                            <input type="text" id="formCompanyPassword" required placeholder="***"/>
+                            <input
+                                type="text"
+                                id="formCompanyPassword"
+                                required
+                                placeholder="***"
+                                onChange={(data) => {
+                                    this.setState({
+                                        ...this.state, user:
+                                            {
+                                                ...this.state.user, password: data.target.value
+                                            }
+                                    })
+                                }}
+                            />
 
                             <div>
                                 Фото:
@@ -201,11 +270,24 @@ class SignUp extends Component {
                             <div>
                                 Телефон:
                             </div>
-                            <input type="text" id="formCompanyPhone" required placeholder=""/>
+                            <input
+                                type="text"
+                                id="formCompanyPhone"
+                                required
+                                placeholder=""
+                                onChange={(data) => {
+                                    this.setState({
+                                        ...this.state, user:
+                                            {
+                                                ...this.state.user, password: data.target.value
+                                            }
+                                    })
+                                }}
+                            />
                         </form>
                     }
 
-                    <button onClick={this.createNewUser}>
+                    <button onClick={this.postNewUser.bind(this)}>
                         Отправить
                     </button>
 
@@ -217,4 +299,12 @@ class SignUp extends Component {
     }
 }
 
-export default SignUp;
+export default connect(
+    state => ({
+        user: state.user,
+    }),
+    dispatch => ({
+        onAddUser: (user) => dispatch(addUser(user)),
+        handleNavigate: (page) => dispatch(goToPage(page))
+    })
+)(SignUp);

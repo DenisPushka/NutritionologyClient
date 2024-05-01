@@ -5,7 +5,8 @@ import user from './users';
 import products from "./products";
 import diet from "./diet";
 import takeDish from "./takeDish";
-import dishes from "./dishes";
+import router from "./router";
+import mealTime from "./mealTime";
 
 
 export const rootReducer = combineReducers({
@@ -13,6 +14,7 @@ export const rootReducer = combineReducers({
     user,
     products,
     diet,
-    dishes,
-    takeDish
+    takeDish,
+    router,
+    mealTime
 });

@@ -2,7 +2,8 @@
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import "./LogIn.css";
-import {connect} from "react-redux";
+import {connect, useDispatch} from "react-redux";
+import {addUser, goToPage} from "../../actions";
 
 // Атворизация.
 class LogIn extends Component {
@@ -11,10 +12,8 @@ class LogIn extends Component {
         /**
          * User auth.
          * */
-        user: {
-            login: "",
-            password: ""
-        }
+        login: "",
+        password: ""
     };
 
     constructor(props) {
@@ -29,47 +28,65 @@ class LogIn extends Component {
     async checkLogin(event) {
         event.preventDefault()
 
-        let form = document.getElementById("login_form");
-
-        let data = new FormData();
-        data.append("json", JSON.stringify({Login: form.children[1].value, Password: form.children[3].value}));
-
-        fetch("/Account/Login",
+        fetch(`/user/login?login=${this.state.login}&password=${this.state.password}`,
             {
-                method: 'POST',
-                body: data
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
+                },
             })
-            .then(res => {
-                console.log(1)
-                res.json().then(async (data) => {
-                    this.setState({user: data});
-                    this.props.onAddUser(data);
-                    window.location  = '/';
-                });
+            .then((res) => {
+                if (res.status !== 200) {
+                    console.error("Не верный логин или пароль")
+                    return null;
+                }
+
+                return res.json();
+            })
+            .then((data) => {
+                if (data !== null) {
+                    this.props.onAddUser(data)
+                    this.props.handleNavigate("/NutritionologyClient/#/");
+                }
             });
     }
 
     render() {
-        return (<div>
+        return (
+            <div>
+                <Header/>
 
-            <Header/>
+                <div className="login">
+                    <h2>Вход</h2>
+                    <form action="" className="login-form" id={"login_form"}>
 
-            <div className="login">
-                <h2>Вход</h2>
-                <form action="" className="login-form" id={"login_form"}>
+                        <div> Логин</div>
+                        <input
+                            type="text"
+                            name="login_input"
+                            id="login_input"
+                            onChange={(data) => this.setState({login: data.target.value})}
+                            placeholder="Логин"
+                        />
 
-                    <div> Логин</div>
-                    <input type="text" name="login_input" id="login_input" placeholder="Логин"/>
+                        <div> Пароль</div>
+                        <input
+                            type="text"
+                            name="password_input"
+                            id="password_input"
+                            onChange={(data) => this.setState({password: data.target.value})}
+                            placeholder="Пароль"
+                        />
 
-                    <div> Пароль</div>
-                    <input type="text" name="password_input" id="password_input" placeholder="Пароль"/>
+                    </form>
+                    <button type="button" className="button_input_login" onClick={this.checkLogin}>Войти</button>
+                </div>
 
-                </form>
-                <button type="button" className="button_input_login" onClick={this.checkLogin}>Войти</button>
+                <Footer/>
             </div>
-
-            <Footer/>
-        </div>);
+        );
     }
 }
 
@@ -78,6 +95,7 @@ export default connect(
         user: state.user,
     }),
     dispatch => ({
-        onAddUser: (user) => dispatch({type: 'ADD_USER', payload: user})
+        onAddUser: (user) => dispatch(addUser(user)),
+        handleNavigate: (page) => dispatch(goToPage(page))
     })
 )(LogIn);

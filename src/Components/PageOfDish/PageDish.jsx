@@ -1,7 +1,10 @@
 import {Component} from "react";
 import './PageDish.css';
+import Header from "../Header/Header";
+import {connect} from "react-redux";
+import Footer from "../Footer/Footer";
 
-export class PageDish extends Component {
+class PageDish extends Component {
     state = {
         dish: {}
     }
@@ -13,9 +16,7 @@ export class PageDish extends Component {
     }
 
     componentDidMount() {
-        if (sessionStorage.getItem('take_dish') !== null) {
-            this.setState({dish: JSON.parse(sessionStorage.getItem('take_dish'))});
-        }
+        this.setState({dish: this.props.takeDish});
     }
 
     showNutrients() {
@@ -52,8 +53,10 @@ export class PageDish extends Component {
     }
 
     render() {
-        console.log(this.state.dish)
         return <>
+
+            <Header/>
+
             <div className={"headerPageDish"}>
                 {
                     this.state.dish.name != null &&
@@ -89,7 +92,7 @@ export class PageDish extends Component {
             </div>
 
             <div className={"pageDishRecipe"}>
-                Рецепт
+               <div className={"headerPageDish"}>Рецепт</div>
 
                 <br/>
 
@@ -106,6 +109,14 @@ export class PageDish extends Component {
                     Заказать
                 </button>
             </div>
+
+            <Footer/>
         </>
     }
 }
+
+export default connect(
+    state => ({
+        takeDish: state.takeDish
+    })
+)(PageDish)

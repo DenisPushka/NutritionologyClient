@@ -1,27 +1,12 @@
 ﻿import {Component} from "react";
 import {Nav} from "react-bootstrap";
 import ".//Header.css";
+import {connect} from "react-redux";
+import {goToPage} from "../../actions";
 
 // Шапка.
 class Header extends Component {
 
-    state = {
-        user: {
-            email: ''
-        }
-    }
-
-    constructor(props) {
-        super(props);
-    }
-
-    componentDidMount() {
-        console.log(this.state.user)
-
-        if (sessionStorage.getItem('state') !== null) {
-            this.setState({user: sessionStorage.getItem('state')});
-        }
-    }
 
     /**
      * Показывает меню при нажатии на "гамбургер".
@@ -69,20 +54,36 @@ class Header extends Component {
 
             <header className={"container_header"}>
 
-                <Nav.Link href="/NutritionologyClient/#/">
+                <Nav.Link onClick={() => this.props.handleNavigate("/NutritionologyClient/#/")}>
                     <div className={["name", "logo"].join(' ')}>
                         Nutritionology
                     </div>
                 </Nav.Link>
 
                 {
-                    this.state.user.email !== ''
+                    this.props.user.email !== undefined && this.props.user.email !== ''
                         ? (
                             <>
-                                <div><Nav.Link href="/NutritionologyClient/#/Menu">Мой рацион</Nav.Link></div>
-                                <div><Nav.Link href="/NutritionologyClient/#/PK">Личный кабинет</Nav.Link></div>
-                                {/*// todo вынести для компаний и админа*/}
-                                <div><Nav.Link href="/NutritionologyClient/#/CreateDish">Создание блюда</Nav.Link></div>
+                                <div>
+                                    <Nav.Link onClick={() => this.props.handleNavigate("/NutritionologyClient/#/ShowMenu")}>
+                                        Мой рацион
+                                    </Nav.Link>
+                                </div>
+
+                                <div>
+                                    <Nav.Link onClick={() => this.props.handleNavigate("/NutritionologyClient/#/PK")}>
+                                        Личный кабинет
+                                    </Nav.Link>
+                                </div>
+
+                                {
+                                    (
+                                        this.props.user.company !== null
+                                        || (this.props.user.userRole !== undefined && this.props.user.userRole !== null
+                                            && this.props.user.userRole.name === 'ADMIN')
+                                    ) &&
+                                    <div><Nav.Link href="/NutritionologyClient/#/CreateDish">Создание блюда</Nav.Link></div>
+                                }
                             </>
                         ) : (
                             <div className={"login_and_reg"}>
@@ -96,4 +97,11 @@ class Header extends Component {
     }
 }
 
-export default Header;
+export default connect(
+    state => ({
+        user: state.user
+    }),
+    dispatch => ({
+        handleNavigate: (page) => dispatch(goToPage(page))
+    })
+)(Header);

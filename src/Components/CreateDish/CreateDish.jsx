@@ -2,6 +2,7 @@ import {Component} from "react";
 import Header from "../Header/Header";
 import "./CreateDish.css"
 import {connect} from "react-redux";
+import {addProducts} from "../../actions";
 
 class CreateDish extends Component {
 
@@ -85,7 +86,7 @@ class CreateDish extends Component {
 
         if (this.props.products !== null && this.props.products.length !== 0) {
             this.setState({getProducts: this.props.products},
-                    () => callback(JSON.parse(sessionStorage.getItem(this.props.products, true)))
+                    () => callback(this.props.products, true)
             );
             return
         }
@@ -449,6 +450,6 @@ export default connect(
         products: state.products
     }),
     dispatch => ({
-        setProducts: (products) => dispatch({type: 'SET_PRODUCTS', payload: products})
+        setProducts: (products) => dispatch(addProducts(products))
     })
 )(CreateDish);

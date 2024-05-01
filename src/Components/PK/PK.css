@@ -19,3 +19,11 @@
     justify-content: center;
     align-items: center;
 }
+
+.show_menu_header_params_1_PARAM {
+    font-size: 18px;
+    font-weight: bold;
+    color: #f8f8d9;
+
+    padding-bottom: 5%;
+}

@@ -3,6 +3,8 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import "./PK.css";
 import CreateParameter from "../CreateParamters/CreateParameter";
+import {connect} from "react-redux";
+import {addUser, goToPage} from "../../actions";
 
 // Личный кабинет.
 class PK extends Component {
@@ -10,7 +12,7 @@ class PK extends Component {
     state = {
         // Пользователь.
         user: {
-            id: "",
+            userId: "",
             email: "",
             password: "",
             photo: null,
@@ -19,36 +21,54 @@ class PK extends Component {
                 name: "",
                 price: 0
             },
-            phone: ""
+            phone: "",
+            customer: {
+                customerId: "",
+                name: "",
+                lastName: ""
+            },
+
+            // Юр. лицо.
+            company: {
+                companyId: "",
+                name: ""
+            },
+            parameters: {}
         },
-
-        // Физ. лицо.
-        customer: {
-            customerId: "",
-            name: "",
-            lastName: ""
-        },
-
-        // Юр. лицо.
-        company: {
-            companyId: "",
-            name: ""
-        },
-
-        type: "customer",
-
-        // Парамаетры (Использовать объекты Parameter.js).
-        parameters: []
     };
 
-    constructor(props) {
-        super(props);
-
-        // TODO добавить редьюсер + запоминать пользователя и загружать сюда данные, если он определены.
-    }
-
     componentDidMount() {
-        // let responce = fetch('');
+        this.setState({user: this.props.user}, () => {
+            if (this.state.user.parameters !== null) {
+                return
+            }
+
+            fetch(`/user/get-param?userId=${this.state.user.userId}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
+                    },
+                })
+                .then((res) => {
+                    if (res.status !== 200) {
+                        console.error("Не верный логин или пароль")
+                        return null;
+                    }
+
+                    return res.json();
+                })
+                .then((data) => {
+                    if (data !== null) {
+                        this.setState({...this.state, user: {...this.state.user, parameters: data}}, () => {
+                            console.log(this.state.user)
+                            this.props.onAddUser(this.state.user)
+                        })
+                    }
+                });
+        })
     }
 
     render() {
@@ -73,28 +93,30 @@ class PK extends Component {
 
                         {/*Юр лицо.*/}
                         {
-                            this.state.customer !== null && this.state.type === 'customer' &&
+                            this.state.user.customer !== undefined && this.state.user.customer !== null && this.state.user.customer.name !== undefined &&
                             <div>
-                                <div>
-                                    Имя: {this.state.customer.name}
-                                </div>
+                                {/*<div>*/}
+                                {/*    Имя: {this.state.user.customer.name}*/}
+                                {/*</div>*/}
+                                Имя:
+                                <input type="text" placeholder={this.state.user.customer.name}/>
 
-                                <input type="text"/>
-
-                                <div>
-                                    Фамилия: {this.state.customer.lastName}
-                                </div>
-                                <input type="text"/>
+                                <br/>
+                                {/*<div>*/}
+                                {/*    Фамилия: {this.state.user.customer.lastName}*/}
+                                {/*</div>*/}
+                                Фамилия:
+                                <input type="text" placeholder={this.state.user.customer.lastName}/>
 
                             </div>
                         }
 
                         {/*Физ лицо.*/}
                         {
-                            this.state.company !== null && this.state.type === 'company' &&
+                            this.state.user.company !== undefined && this.state.user.company !== null &&
                             <div>
                                 <div>
-                                    Название: {this.state.company.name}
+                                    Название: {this.state.user.company.name}
                                 </div>
                                 <input type="text"/>
                             </div>
@@ -103,18 +125,18 @@ class PK extends Component {
                         {/* Общие данные.*/}
                         {
                             <div>
-                                <div>
-                                    Почта: {this.state.user.email}
+                                {/*<div>*/}
+                                {/*    Почта: {this.state.user.email}*/}
+                                {/*</div>*/}
+                                Почта:
+                                <input type="text" placeholder={this.state.user.email}/>
+
+                                <br/>
+
+                                <div className={'show_menu_header_params_1_PARAM'}>
+                                    Подписка:
                                 </div>
-                                <input type="text"/>
 
-                                <div>
-                                    Телефон: {this.state.user.phone}
-                                </div>
-                                <input type="text"/>
-
-
-                                Подписка:
                                 <div>
                                     {
                                         this.state.user.subscription !== null &&
@@ -132,44 +154,31 @@ class PK extends Component {
                             </div>
                         }
 
-
-                        Параметры
-
-                        {
-                            this.state.parameters.length > 0 && this.state.parameters.map((parameter) => {
-                                return (
-                                    <div>Пол: {parameter.gender.shortName}</div> &&
-                                    <div>Рост (см.): {parameter.height}</div> &&
-                                    <div>Вес (кг.): {parameter.weight}</div> &&
-                                    <div>Возраст: {parameter.age}</div> &&
-                                    <div>Любимые продукты: </div> &&
-
-                                    parameter.likeProducts.length > 0 && parameter.likeProducts.map((product) => {
-                                        return (
-                                            <div>
-                                                {product.fullName},
-                                            </div>
-                                        );
-                                    }) &&
-                                    <div>Нежелательные продукты: </div> &&
-                                    parameter.problemProducts.length > 0 && parameter.problemProducts.map((product) => {
-                                        return (
-                                            <div>
-                                                {product.fullName},
-                                            </div>
-                                        );
-                                    })
-                                );
-                            })
-                        }
-
+                        <div>
+                            <div className={'show_menu_header_params_1_PARAM'}>
+                                Параметры:
+                            </div>
+                            <hr/>
+                            <div>Рост (см.): {this.state.user.parameters.height}</div>
+                            <div>Вес (кг.): {this.state.user.parameters.weight}</div>
+                            <div>Возраст: {this.state.user.parameters.age}</div>
+                            <div>Любимые продукты: </div>
+                        </div>
                     </div>
                 </div>
 
                 <Footer/>
             </div>
-        );
+        )
     }
 }
 
-export default PK;
+export default connect(
+    state => ({
+        user: state.user
+    }),
+    dispatch => ({
+        onAddUser: (user) => dispatch(addUser(user)),
+        handleNavigate: (page) => dispatch(goToPage(page))
+    })
+)(PK);

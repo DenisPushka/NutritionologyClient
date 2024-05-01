@@ -3,6 +3,7 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import "./showMenu.css";
 import {connect} from "react-redux";
+import {addUser, goToPage, setDietId, setDishes, setTakeDish} from "../../actions";
 
 /**
  * Отображение меню (рациона).
@@ -37,32 +38,79 @@ class ShowMenu extends Component {
                     name: ''
                 }
             }
-        ]
+        ],
+        diet: "",
+        user: {}
     }
 
     componentDidMount() {
-        fetch('/diet?id=E183F86B-6DF1-4B69-A33E-9F738ABFD2D4', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE"
-            },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                this.setState({dietDishes: data.dietDishes}, () => {
-                    this.downloadDishes();
-                    console.log(`%c Diet download!`, "color: green");
-                });
+        if (this.props.diet.dietId === "") {
+            fetch(`/diet/use-user-id?userId=${this.props.user.userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE"
+                },
             })
-            .catch((error) => console.error(error));
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data)
+                    this.setState({dietDishes: data.dietDishes}, () => {
+                        this.downloadDishes();
+                        this.props.setDietId(data.dietId);
+                        this.props.setDishes(data.dietDishes);
+
+                        console.log(`%c Diet download!`, "color: green");
+                    });
+                })
+                .catch((error) => console.error(error));
+        } else {
+            this.setState({dietDishes: this.props.diet.dishes}, () => {
+                this.downloadDishes();
+
+                console.log(`%c Diet download!`, "color: green");
+            });
+        }
+
+
+        this.setState({user: this.props.user}, () => {
+            if (this.state.user.parameters.gender !== undefined && this.state.user.parameters.gender !== null) {
+                return
+            }
+
+            fetch(`/user/get-param?userId=${this.state.user.userId}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
+                    },
+                })
+                .then((res) => {
+                    if (res.status !== 200) {
+                        console.error("Не верный логин или пароль")
+                        return null;
+                    }
+
+                    return res.json();
+                })
+                .then((data) => {
+                    if (data !== null) {
+                        this.setState({...this.state, user: {...this.state.user, parameters: data}}, () => {
+                            console.log(this.state.user)
+                            this.props.onAddUser(this.state.user)
+                        })
+                    }
+                });
+        })
     }
 
     takeDish(dish) {
         console.log(dish);
-        this.props.onTakeDish(dish);
-        window.location = `#/PageDish`;
+        this.props.setTakeDish(dish);
+        this.props.handleNavigate(`/NutritionologyClient/#/PageDish`);
     }
 
     downloadDishes() {
@@ -200,11 +248,14 @@ class ShowMenu extends Component {
                             Параметры
                         </div>
 
-                        <div className={"show_menu_header_params_1_1"}>
-                            <div>Пол: мужской</div>
-                            <div>Рост: 180 см</div>
-                            <div>Вес: 74 кг</div>
-                        </div>
+                        {
+                            this.props.user.parameters !== undefined && this.props.user.parameters !== null && this.props.user.parameters.gender !== undefined &&
+                            <div className={"show_menu_header_params_1_1"}>
+                                <div>Пол: {this.props.user.parameters.gender.fullName}</div>
+                                <div>Рост: {this.props.user.parameters.height} см</div>
+                                <div>Вес: {this.props.user.parameters.weight} кг</div>
+                            </div>
+                        }
                     </div>
 
                     <div className={"show_menu_header_params_1_1"}>
@@ -213,7 +264,7 @@ class ShowMenu extends Component {
                             <div>Нелюбимые продукты: <select></select></div>
                         </div>
 
-                        <div>Количество приемов пищи: 3</div>
+                        <div>Количество приемов пищи: {this.props.user.parameters.countMealTimeInDay}</div>
 
                         <button onClick={this.downloadDocument}>Скачать отчет</button>
                     </div>
@@ -265,13 +316,14 @@ class ShowMenu extends Component {
 export default connect(
     state => ({
         take_dish: state.take_dish,
+        diet: state.diet,
+        user: state.user
     }),
     dispatch => ({
-        onTakeDish: (dish) => {
-            dispatch({type: 'TAKE_DISH', payload: dish})
-        }
-        // onAddUser: (user)=>{
-        //     dispatch({type: 'ADD_USER', payload: user})
-        // }
+        setTakeDish: (dish) => dispatch(setTakeDish(dish)),
+        setDietId: (dietId) => dispatch(setDietId(dietId)),
+        setDishes: (dishes) => dispatch(setDishes(dishes)),
+        onAddUser: (user) => dispatch(addUser(user)),
+        handleNavigate: (page) => dispatch(goToPage(page))
     })
 )(ShowMenu);

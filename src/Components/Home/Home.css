@@ -27,14 +27,23 @@ footer {
 }
 
 hr {
+    margin-top: 10px;
     background-color: #287233;
     color: #287233;
-    height: 1px;
+    height: 0px;
 }
 
 .container_body {
     padding: 0.5% 5vw;
     text-align: center;
+    gap: 20px;
+
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    flex-direction: column;
 }
 
 .subTittle {
@@ -48,7 +57,7 @@ hr {
 .blocks {
     display: flex;
     flex-direction: row;
-    gap: 20px;
+    gap: 40px;
     justify-content: space-between;
 }
 
@@ -58,6 +67,7 @@ hr {
     border-radius: 5px;
     padding: 10px;
     animation: ease-in-out .3s transform;
+    cursor: pointer;
 }
 
 .block:hover {
